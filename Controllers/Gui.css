@@ -1,0 +1,45 @@
+QWidget#main {
+
+    background-color: lightgrey;
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+}
+
+QWidget#pictureOutput {
+    min-width: 1280px;
+    min-height: 720px;
+    border: 2px solid;
+    border-color: grey;
+    background-color: grey;
+}
+
+QWidget#settingsInput{
+    border: 2px solid;
+    border-color: grey;
+    border-radius: 5px;
+    min-width:200px;
+    background-color: lightgrey;
+}
+QWidget#processing{
+    border-radius: 5px;
+    background-position: top;
+    height: 70px;
+    border: 2px solid;
+    border-color:gray;
+}
+QWidget#evaluating{
+    border-radius: 5px;
+    background-position: top;
+    height: 150px;
+    border: 2px solid;
+    border-color:gray;
+}
+
+QWidget#processingStrategiesCombobox{
+
+}
+
+QWidget#evaluatingCheckBox{
+    background-position: bottom;
+}
