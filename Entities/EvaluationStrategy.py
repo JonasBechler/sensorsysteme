@@ -22,8 +22,6 @@ class IEvaluationStrategy(ABC):
         return self.name
 
 
-def allEvaluationStrategies():
-    return currentFPSandDT(), averageFPSandDT(), showCurrentPositions()
 
 
 class currentFPSandDT(IEvaluationStrategy):
@@ -38,6 +36,8 @@ class currentFPSandDT(IEvaluationStrategy):
             return 1 / currentTimeDiff()
 
         img = data[0][0]
+        if data[0][2] in None:
+            return img
         debugFps = "fps: " + ('%.3f' % currentFPS())
         debugDt = "dt: " + ('%.3f' % (currentTimeDiff() * 1000))
         cv2.putText(img, debugFps, (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
@@ -66,6 +66,8 @@ class averageFPSandDT(IEvaluationStrategy):
             return timeSum
 
         img = data[0][0]
+        if data[0][2] in None:
+            return img
 
         debugFps = "fpsAv: " + ('%.3f' % averageFPS())
         debugDt = "dtAv: " + ('%.3f' % (averageTimeDiff() * 1000))

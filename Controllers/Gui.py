@@ -1,3 +1,5 @@
+import os
+import pickle
 import time
 
 from PyQt5 import Qt
@@ -11,6 +13,7 @@ from PyQt5.QtWidgets import *
 from Controllers.CamerController import CV2Controller
 from Entities.EvaluationStrategy import *
 from Entities.ProcessingStrategy import *
+from UseCases.TestUC import TestUC
 from UseCases.DebugUC import Debug
 
 
@@ -25,10 +28,7 @@ class PyQtController(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        allProcessingStrategies = (ProcessingStrategy1("fD = 8", frameDivider=8),
-                                   ProcessingStrategy1("fD = 16", frameDivider=16),
-                                   ProcessingStrategy1("fD = 32", frameDivider=32),
-                                   ProcessingStrategy1("fD = 64", frameDivider=64),
+        allProcessingStrategies = (ProcessingStrategy1("fD = 64", frameDivider=64),
                                    ProcessingStrategy1("fD = 128", frameDivider=128)
                                    )
         self.processingStrategies = {str(processingStrategy): processingStrategy
@@ -77,6 +77,7 @@ class PyQtController(QMainWindow):
         settingsLayout = QVBoxLayout()
         settingsLayout.addWidget(ProzessingGroupbox(self, objectName="processing"))
         settingsLayout.addWidget(EvaluatingGroupbox(self, objectName="evaluating"))
+        settingsLayout.addWidget(TestingGroupbox(self, objectName="testing"))
 
         settingsLayout.addStretch(1)
         self.settingsInput.setLayout(settingsLayout)
@@ -163,4 +164,64 @@ class EvaluatingGroupbox(QGroupBox):
                 strategies.append(self.evalStrategies[evalStrategyKey])
         self.parent.selectedEvaluatingStrategies = strategies
         self.parent.updateSettings()
+
+class TestingGroupbox(QGroupBox):
+    def __init__(self, parent, **kwargs):
+        super().__init__(**kwargs)
+        self.parent = parent
+        self.setTitle("Testing")
+        self.setCheckable(True)
+        self.setChecked(False)
+        self.clicked.connect(self.BoxClicked)
+
+        self.folderpath = "TestFiles"
+        self.fileNames = os.listdir(self.folderpath)
+        self.files = dict()
+        for name in self.fileNames:
+            with open(self.folderpath+"/"+name, "rb") as f:
+                self.files[name] = pickle.load(f)
+
+        self.currentFileName = self.fileNames[0]
+        self.currentIndex = 0
+
+
+        self.setTitle("Testing")
+
+
+        layout = QVBoxLayout()
+        self.lable = QLabel()
+        self.lable.setText("0/10 Data")
+        layout.addWidget(self.lable)
+
+        self.testingCombobox = QComboBox(objectName="testingCombobox")
+        self.testingCombobox.addItems(self.fileNames)
+        self.testingCombobox.currentIndexChanged.connect(self.dataChanged)
+
+        layout.addWidget(self.testingCombobox)
+        self.setLayout(layout)
+        self.setLayout(layout)
+
+    def BoxClicked(self):
+        if self.isChecked():
+            self.testUC = TestUC(self, self.files[self.currentFileName][1],
+                                 self.parent.selectedProcessingStrategy,
+                                 self.parent.selectedEvaluatingStrategies)
+
+            self.parent.useCase.stop()
+            self.stoppedUseCase = self.parent.useCase
+            self.parent.useCase = self.testUC
+
+            self.updatePicture()
+
+        else:
+            self.parent.useCase = self.stoppedUseCase
+            self.parent.useCase.start()
+
+    def dataChanged(self):
+        self.currentFile = self.testingCombobox.currentText()
+        self.testUC = TestUC(self, self.files[self.currentFileName], self.parent.selectedProcessingStrategy, self.parent.selectedEvaluatingStrategies)
+
+    def updatePicture(self):
+        if self.isChecked():
+            self.parent.updatePicture(self.testUC.getFrameAt(self.currentIndex))
 

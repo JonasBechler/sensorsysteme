@@ -1,8 +1,4 @@
-import threading
-import time
-import sys
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import QApplication
+import math
 
 
 def function(*args, **kwargs):
@@ -28,42 +24,10 @@ def calc():
     print(steps_soll)
 
 
+
+
+
 if __name__ == '__main__':
-    function()
-    pass
-    pass
-    pass
-    calc()
-
-    function("hallo", "was", "geht", i=5, pos=[4, 3, 2])
-
-
-
-class Obj (QObject):
-    def __init__(self, *args, **kwargs):
-        QObject.__init__(self)
-        self.t = Thread()
-        self.t.start()
-        pass
-
-
-class Thread(QThread):
-    def __init__(self, *args, **kwargs):
-        QThread.__init__(self, *args, **kwargs)
-        self.timer = QTimer()
-        self.timer.moveToThread(self)
-        self.timer.timeout.connect(self.collectProcessData)
-
-    def collectProcessData(self):
-        print ("Collecting Process Data")
-
-    def run(self):
-        self.timer.start(1000)
-        loop = QEventLoop()
-        loop.exec_()
-
-
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     o = Obj()
-#     sys.exit(app.exec_())
+    hyp = 189
+    angle = 15/360*math.pi
+    math.cos(angle)*hyp

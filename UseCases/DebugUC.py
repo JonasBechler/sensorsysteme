@@ -1,4 +1,6 @@
 import time
+import numpy as np
+
 
 from PyQt5.QtCore import *
 
@@ -7,6 +9,7 @@ from Entities.ProcessingStrategy import IProcessingStrategy
 from UseCases.TakePictureUC import TakePicture
 from UseCases.ProcessPictureUC import ProcessPicture
 from UseCases.EvaluatePictureUC import EvaluatePicture
+
 
 class Debug(QObject):
     fps = 30
@@ -24,23 +27,32 @@ class Debug(QObject):
     evaluation: QObject
     evaluationThread: QThread
 
+    picture: np.array
+
+    def getPictureArray(self):
+        return self.picture
+
     def updateSettings(self, selectedProcessingStrategy, selectedEvaluatingStrategies):
         self.processingStrategy = selectedProcessingStrategy
         self.takingPicture.stop()
         del self.takingPicture
         self.startTakingPictures()
-        self.processingStrategy = selectedProcessingStrategy
-        self.evaluationStrategyChangedSignal.emit(selectedEvaluatingStrategies)
+        self.evaluationStrategies = selectedEvaluatingStrategies
+        self.evaluationStrategyChangedSignal.emit(self.evaluationStrategies)
 
+    def start(self):
+        self.takingPicture.start()
 
+    def stop(self):
+        self.takingPicture.stop()
 
-    def __init__(self, parent, cam, updateFunction, processingStrategy):
+    def __init__(self, cam, processingStrategy):
         super().__init__()
-        self.parent = parent
         self.cam = cam
-        self.updateFunction = updateFunction
+        self.picture = np.zeros(1280*840*3)
+        self.picture.reshape((1280, 840, 3))
         self.processingStrategy = processingStrategy
-        self.processingTreadsSize = 1
+        self.processingTreadsSize = 10
         self.initProcess()
         self.initEval()
 
@@ -52,7 +64,6 @@ class Debug(QObject):
             processingThread = QThread(parent=self)
             self.processingThreads.append(processingThread)
             self.processings.append(None)
-
 
     def initEval(self):
         evaluate = EvaluatePicture(maxCount=50)
@@ -80,7 +91,7 @@ class Debug(QObject):
 
         img, resizedFrames, time = result
         processing = ProcessPicture(img, resizedFrames, self.processingStrategy, time)
-        processingThread = QThread(parent=self)
+        processingThread = QThread(self)
         processing.moveToThread(processingThread)
 
         processingThread.started.connect(processing.process)
@@ -91,7 +102,8 @@ class Debug(QObject):
         self.processings[self.processingIndex] = processing
 
         self.processingThreads[self.processingIndex].quit()
-        self.processingThreads[self.processingIndex] = processingThread
+        del self.processingThreads[self.processingIndex]
+        self.processingThreads.insert(self.processingIndex, processingThread)
         self.processingIndex = (self.processingIndex + 1) % self.processingTreadsSize
 
     @pyqtSlot(tuple)
@@ -103,7 +115,7 @@ class Debug(QObject):
 
     @pyqtSlot(tuple)
     def evaluationFinished(self, outputFrame):
-        self.parent.updatePicture(outputFrame)
+        self.picture = outputFrame
 
     def __del__(self):
         self.takingPicture.stop()
