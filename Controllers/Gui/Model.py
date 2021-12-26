@@ -32,8 +32,8 @@ class Model:
             self.selectedEvaluatingStrategies
         )
 
-    def getPictureArray(self, ):
-        self.debugUseCase.getPictureArray()
+    def getPictureArray(self):
+        return self.debugUseCase.getPictureArray()
 
     def activateTesting(self):
         pass

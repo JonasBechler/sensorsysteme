@@ -29,6 +29,18 @@ class Debug(QObject):
 
     picture: np.array
 
+    def __init__(self, cam, processingStrategy):
+        super().__init__()
+        self.cam = cam
+        self.picture = np.zeros(720*1280*3)
+        self.picture = self.picture.reshape((720, 1280, 3))
+        self.processingStrategy = processingStrategy
+        self.processingTreadsSize = 10
+        self.initProcess()
+        self.initEval()
+
+        self.startTakingPictures()
+
     def getPictureArray(self):
         return self.picture
 
@@ -45,18 +57,6 @@ class Debug(QObject):
 
     def stop(self):
         self.takingPicture.stop()
-
-    def __init__(self, cam, processingStrategy):
-        super().__init__()
-        self.cam = cam
-        self.picture = np.zeros(1280*840*3)
-        self.picture.reshape((1280, 840, 3))
-        self.processingStrategy = processingStrategy
-        self.processingTreadsSize = 10
-        self.initProcess()
-        self.initEval()
-
-        self.startTakingPictures()
 
     def initProcess(self):
 

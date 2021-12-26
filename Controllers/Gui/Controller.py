@@ -1,6 +1,8 @@
 import os
 import pickle
 import sys
+
+from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QApplication
 
 
@@ -61,10 +63,19 @@ class Controller:
             list(self.evaluationStrategies.keys()),
             self.testFileNames
         )
+
+        self.updateTimer = QTimer()
+        self.updateTimer.setInterval(int(1 / 30))
+        self.updateTimer.timeout.connect(self.updateView)
+        self.updateTimer.start()
         sys.exit(app.exec_())
 
     def updateView(self):
-        self.view.updateView(self.model.getPictureArray())
+        pictureArray = self.model.getPictureArray()
+        try:
+            self.view.setPicture(pictureArray)
+        except:
+            pass
 
     def processingChanged(self, strategyKey: str):
         pass
