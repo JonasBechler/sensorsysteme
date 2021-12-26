@@ -6,33 +6,38 @@ from PyQt5.QtWidgets import QApplication
 
 from Entities.ProcessingStrategy import *
 from Entities.EvaluationStrategy import *
-from .View import View
-from .Model import Model
+
+from Controllers.Gui.View import View
+from Controllers.Gui.Model import Model
 
 
 class Controller:
     view: View
     model: Model
 
-    allProcessingStrategies = (
+    allProcessingStrategies = [
         ProcessingStrategy1("fD = 64", frameDivider=64),
         ProcessingStrategy1("fD = 128", frameDivider=128)
-    )
-    allEvaluatingStrategies = (
+    ]
+    allEvaluatingStrategies = [
         currentFPSandDT(),
         averageFPSandDT(),
         showCurrentPositions()
-    )
+    ]
+
+    processingStrategies = dict()
 
     def __init__(self):
-        self.processingStrategies = {str(processingStrategy): processingStrategy
-                                     for processingStrategy in self.allProcessingStrategies}
+        # general Use
+        for processingStrategy in self.allProcessingStrategies:
+            self.processingStrategies[str(processingStrategy)] = processingStrategy
+
         self.selectedProcessingStrategy = self.allProcessingStrategies[0]
         self.evaluationStrategies = {str(evaluatingStrategy): evaluatingStrategy
-                                     for evaluatingStrategy in self.allEvaluationStrategies}
+                                     for evaluatingStrategy in self.allEvaluatingStrategies}
         self.selectedEvaluatingStrategies = list()
 
-
+        # testing
         self.testFolderPath = "TestFiles"
         self.testFileNames = os.listdir(self.testFolderPath)
         self.testFiles = dict()
@@ -40,20 +45,20 @@ class Controller:
             with open(self.testFolderPath + "/" + name, "rb") as f:
                 self.testFiles[name] = pickle.load(f)
 
-        self.currentFileName = self.testFileNames[0]
+        self.currentTestFileName = self.testFileNames[0]
         self.currentIndex = 0
 
         self.model = Model(
-            self,
-            self.allProcessingStrategies,
-            self.allEvaluatingStrategies
+            self.selectedProcessingStrategy,
+            self.selectedEvaluatingStrategies,
+            self.testFiles[self.currentTestFileName]
         )
 
         app = QApplication(sys.argv)
         self.view = View(
             self,
-            self.model,
-            self.allEvaluatingStrategies,
+            list(self.processingStrategies.keys()),
+            list(self.evaluationStrategies.keys()),
             self.testFileNames
         )
         sys.exit(app.exec_())

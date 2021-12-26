@@ -1,10 +1,10 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from .Controller import Controller
+# from Controllers.Gui.Controller import Controller
 
 
 class View(QMainWindow):
-    controller: Controller
+    # controller: Controller
 
     picture: QLabel
     settings: QWidget
@@ -55,6 +55,7 @@ class View(QMainWindow):
         self.evaluatingGroupbox = QGroupBox()
         self.evaluatingGroupbox.setTitle("Evaluation Strategies")
         layout = QVBoxLayout()
+        self.evaluatingCheckboxes = dict()
         for evaluation in availableEvaluatings:
             checkBox = QCheckBox(evaluation)
             checkBox.clicked.connect(self.evaluationStrategiesChanged)
@@ -70,6 +71,9 @@ class View(QMainWindow):
         self.testingGroupbox.setChecked(False)
         self.testingGroupbox.clicked.connect(self.testingTriggered)
         testingLayout = QVBoxLayout()
+        self.testingLable = QLabel()
+        self.testingLable.setText("0/n")
+        testingLayout.addWidget(self.testingLable)
         self.testingComboBox = QComboBox()
         self.testingComboBox.addItems(availableTests)
         self.testingComboBox.currentIndexChanged.connect(
@@ -90,7 +94,7 @@ class View(QMainWindow):
         mainWidget = QWidget()
         mainWidget.setLayout(layout)
 
-        self.setCentralWidget(self.mainWidget)
+        self.setCentralWidget(mainWidget)
         self.show()
 
     # used by Controller

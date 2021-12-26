@@ -1,11 +1,10 @@
 # Sensorsysteme
 import sys
-
-from PyQt5.QtWidgets import QApplication
-from Controllers.Gui import PyQtController
+from PyQt5 import QtWidgets
+from Controllers.Gui.Controller import Controller
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    pyqtController = PyQtController()
+    app = QtWidgets.QApplication(sys.argv)
+    pyqtController = Controller()
     sys.exit(app.exec_())
