@@ -1,5 +1,8 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+
 # from Controllers.Gui.Controller import Controller
 
 
@@ -40,19 +43,19 @@ class View(QMainWindow):
 
         # settings 1
         self.processingGroupbox = QGroupBox()
+        self.processingGroupbox.setObjectName("groupbox")
         self.processingGroupbox.setTitle("Processing Strategies")
         processingLayout = QVBoxLayout()
         self.processingComboBox = QComboBox()
         self.processingComboBox.addItems(availableProcessings)
-        self.processingComboBox.currentIndexChanged.connect(
-            self.processingStrategiesChanged
-        )
+        self.processingComboBox.currentIndexChanged.connect(self.processingStrategiesChanged)
         processingLayout.addWidget(self.processingComboBox)
         self.processingGroupbox.setLayout(processingLayout)
         settingsLayout.addWidget(self.processingGroupbox)
 
         # settings 2
         self.evaluatingGroupbox = QGroupBox()
+        self.evaluatingGroupbox.setObjectName("groupbox")
         self.evaluatingGroupbox.setTitle("Evaluation Strategies")
         layout = QVBoxLayout()
         self.evaluatingCheckboxes = dict()
@@ -66,6 +69,7 @@ class View(QMainWindow):
 
         # settings 3
         self.testingGroupbox = QGroupBox()
+        self.testingGroupbox.setObjectName("groupbox")
         self.testingGroupbox.setTitle("Testing")
         self.testingGroupbox.setCheckable(True)
         self.testingGroupbox.setChecked(False)
@@ -76,9 +80,7 @@ class View(QMainWindow):
         testingLayout.addWidget(self.testingLable)
         self.testingComboBox = QComboBox()
         self.testingComboBox.addItems(availableTests)
-        self.testingComboBox.currentIndexChanged.connect(
-            self.testingDataChanged
-        )
+        self.testingComboBox.currentIndexChanged.connect(self.testingDataChanged)
         testingLayout.addWidget(self.testingComboBox)
         self.testingGroupbox.setLayout(testingLayout)
         settingsLayout.addWidget(self.testingGroupbox)
@@ -97,6 +99,9 @@ class View(QMainWindow):
         self.setCentralWidget(mainWidget)
         self.show()
 
+    def keyPressEvent(self, e):
+        self.controller.keyPressed(e)
+
     # used by Controller
     def setPicture(self, pictureArray):
         h, w, ch = pictureArray.shape
@@ -107,6 +112,7 @@ class View(QMainWindow):
     def setAvailableProcessings(self, strategies: list[str]) -> None:
         self.processingComboBox.clear()
         self.processingComboBox.addItems(strategies)
+        self.processingComboBox.currentIndexChanged.connect(self.processingStrategiesChanged)
 
     def setAvailableEvaluationes(self, evaluations: list[str]) -> None:
         layout = QVBoxLayout()
@@ -121,12 +127,15 @@ class View(QMainWindow):
         self.testingComboBox.clear()
         self.testingComboBox.addItems(tests)
 
+    def setTestsLable(self, currentIndex, maxIndex) -> None:
+        self.testingLable.setText(str(currentIndex+1)+"/"+str(maxIndex))
+
     # on input. connects controller
-    def processingStrategiesChanged(self) -> None:
-        strategyKey = self.processingCombobox.currentText()
+    def processingStrategiesChanged(self):
+        strategyKey = self.processingComboBox.currentText()
         self.controller.processingChanged(strategyKey)
 
-    def evaluationStrategiesChanged(self) -> None:
+    def evaluationStrategiesChanged(self):
         strategies = list()
         for evalStrategyKey in self.evaluatingCheckboxes.keys():
             if self.evaluatingCheckboxes[evalStrategyKey].checkState():
@@ -134,10 +143,10 @@ class View(QMainWindow):
 
         self.controller.evaluationChanged(strategies)
 
-    def testingTriggered(self) -> None:
-        isActive = self.evaluatingGroupbox.isChecked()
+    def testingTriggered(self):
+        isActive = self.testingGroupbox.isChecked()
         self.controller.testingTriggered(isActive)
 
-    def testingDataChanged(self) -> None:
+    def testingDataChanged(self):
         dataKey = self.testingGroupbox.currentText()
         self.controller.testingChanged(dataKey)

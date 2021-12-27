@@ -52,12 +52,6 @@ class Debug(QObject):
         self.evaluationStrategies = selectedEvaluatingStrategies
         self.evaluationStrategyChangedSignal.emit(self.evaluationStrategies)
 
-    def start(self):
-        self.takingPicture.start()
-
-    def stop(self):
-        self.takingPicture.stop()
-
     def initProcess(self):
 
         for i in range(self.processingTreadsSize):

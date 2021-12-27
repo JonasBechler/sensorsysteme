@@ -26,17 +26,22 @@ class Model:
             self.selectedProcessingStrategy
         )
 
+        self.testingIsActive = False
         self.testingUseCase = TestUC(
             self.selectedData,
             self.selectedProcessingStrategy,
             self.selectedEvaluatingStrategies
         )
+        self.testingIndex = 0
 
     def getPictureArray(self):
-        return self.debugUseCase.getPictureArray()
+        if not self.testingIsActive:
+            return self.debugUseCase.getPictureArray()
+        else:
+            return self.testingUseCase.getFrameAt(self.testingIndex)
 
-    def activateTesting(self):
-        pass
+    def setTesting(self, state):
+        self.testingIsActive = state
 
-    def deactivateTesting(self):
-        pass
+    def setTestingIndex(self, index):
+        self.testingIndex = index

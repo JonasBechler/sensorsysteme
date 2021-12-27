@@ -2,7 +2,7 @@ import os
 import pickle
 import sys
 
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtWidgets import QApplication
 
 
@@ -48,7 +48,7 @@ class Controller:
                 self.testFiles[name] = pickle.load(f)
 
         self.currentTestFileName = self.testFileNames[0]
-        self.currentIndex = 0
+        self.currentTestIndex = 0
 
         self.model = Model(
             self.selectedProcessingStrategy,
@@ -63,6 +63,7 @@ class Controller:
             list(self.evaluationStrategies.keys()),
             self.testFileNames
         )
+        self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
 
         self.updateTimer = QTimer()
         self.updateTimer.setInterval(int(1 / 30))
@@ -71,11 +72,10 @@ class Controller:
         sys.exit(app.exec_())
 
     def updateView(self):
+
         pictureArray = self.model.getPictureArray()
-        try:
-            self.view.setPicture(pictureArray)
-        except:
-            pass
+        self.view.setPicture(pictureArray)
+
 
     def processingChanged(self, strategyKey: str):
         pass
@@ -83,12 +83,23 @@ class Controller:
     def evaluationChanged(self, strategyKeys: list[str]):
         pass
 
-    def testingTriggered(self, isActive: bool):
-        if isActive:
-            self.model.activateTesting()
-
-        else:
-            self.model.deactivateTesting()
+    def testingTriggered(self, isActive):
+        self.model.setTesting(isActive)
 
     def testingChanged(self, testKey: str):
-        self.currentFileName = testKey
+        self.currentTestFileName = testKey
+
+    def keyPressed(self, keyNumber):
+        if keyNumber.key() == Qt.Key_Right:
+            if self.currentTestIndex > 0:
+                self.currentTestIndex = self.currentTestIndex - 1
+                self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+
+        if keyNumber.key() == Qt.Key_Left:
+            if self.currentTestIndex < len(self.testFiles[self.currentTestFileName]) - 1:
+                self.currentTestIndex = self.currentTestIndex + 1
+                self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+
+        self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+        self.model.setTestingIndex(self.currentTestIndex)
+

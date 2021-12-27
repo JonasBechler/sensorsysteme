@@ -38,8 +38,6 @@ class TakePicture(QObject):
         self._init()
         self.timer.start()
 
-    def stop(self):
-        self.timer.stop()
 
 
     def _init(self):
