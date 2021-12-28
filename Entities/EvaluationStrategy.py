@@ -14,8 +14,7 @@ class IEvaluationStrategy(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self, data):
-        # data = [[img, calculatedPositionRGB, time], ...]
+    def evaluate(self, img, positions, times):
         pass
 
     def __str__(self):
@@ -28,15 +27,16 @@ class currentFPSandDT(IEvaluationStrategy):
     name = "currentFPSandDT"
     dataPoints = 2
 
-    def evaluate(self, data):
+    def evaluate(self, img, positions, times):
+
         def currentTimeDiff():
-            return data[0][2] - data[1][2]
+            return times[0] - times[1]
 
         def currentFPS():
             return 1 / currentTimeDiff()
 
-        img = data[0][0]
-        if data[0][2] in None:
+
+        if times[0] is None:
             return img
         debugFps = "fps: " + ('%.3f' % currentFPS())
         debugDt = "dt: " + ('%.3f' % (currentTimeDiff() * 1000))
@@ -50,23 +50,22 @@ class averageFPSandDT(IEvaluationStrategy):
     name = "averageFPSandDT"
     dataPoints = 30
 
-    def evaluate(self, data):
+    def evaluate(self, img, positions, times):
         def averageFPS():
             fpsSum = 0
             for i in range(self.dataPoints - 1):
-                fpsSum = fpsSum + 1 / (data[i][2] - data[i + 1][2])
+                fpsSum = fpsSum + 1 / (times[i] - times[i + 1])
             fpsSum = fpsSum / (self.dataPoints - 1)
             return fpsSum
 
         def averageTimeDiff():
             timeSum = 0
             for i in range(self.dataPoints - 1):
-                timeSum = timeSum + data[i][2] - data[i + 1][2]
+                timeSum = timeSum + times[i] - times[i + 1]
             timeSum = timeSum / (self.dataPoints - 1)
             return timeSum
 
-        img = data[0][0]
-        if data[0][2] in None:
+        if times[0] is None:
             return img
 
         debugFps = "fpsAv: " + ('%.3f' % averageFPS())
@@ -77,17 +76,18 @@ class averageFPSandDT(IEvaluationStrategy):
 
         return img
 
+
 class showCurrentPositions(IEvaluationStrategy):
     name = "Current Position"
     dataPoints = 1
 
-    def evaluate(self, data):
-        img, positions, time = data[0]
-        if positions[0][0] is not None:
-            cv2.circle(img, (int(positions[0][0]), int(positions[0][1])), 5, (0, 0, 255), cv2.FILLED)
-        if positions[1][0] is not None:
-            cv2.circle(img, (int(positions[1][0]), int(positions[1][1])), 5, (0, 255, 0), cv2.FILLED)
-        if positions[2][0] is not None:
-            cv2.circle(img, (int(positions[2][0]), int(positions[2][1])), 5, (255, 0, 0), cv2.FILLED)
+    def evaluate(self, img, positions, times):
+        position = positions[0]
+        if position[0][0] is not None:
+            cv2.circle(img, (int(position[0][0]), int(position[0][1])), 5, (0, 0, 255), cv2.FILLED)
+        if position[1][0] is not None:
+            cv2.circle(img, (int(position[1][0]), int(position[1][1])), 5, (0, 255, 0), cv2.FILLED)
+        if position[2][0] is not None:
+            cv2.circle(img, (int(position[2][0]), int(position[2][1])), 5, (255, 0, 0), cv2.FILLED)
         return img
 

@@ -76,15 +76,23 @@ class Controller:
         pictureArray = self.model.getPictureArray()
         self.view.setPicture(pictureArray)
 
-
     def processingChanged(self, strategyKey: str):
-        pass
+        self.selectedProcessingStrategy = self.processingStrategies[strategyKey]
+
+        self.model.setSettings(self.selectedProcessingStrategy, self.selectedEvaluatingStrategies)
 
     def evaluationChanged(self, strategyKeys: list[str]):
-        pass
+        self.selectedEvaluatingStrategies = list()
+        for key in strategyKeys:
+            self.selectedEvaluatingStrategies.append(self.evaluationStrategies[key])
+
+        self.model.setSettings(self.selectedProcessingStrategy, self.selectedEvaluatingStrategies)
 
     def testingTriggered(self, isActive):
-        self.model.setTesting(isActive)
+        self.model.setTesting(
+            isActive,
+            self.selectedProcessingStrategy,
+            self.selectedEvaluatingStrategies)
 
     def testingChanged(self, testKey: str):
         self.currentTestFileName = testKey

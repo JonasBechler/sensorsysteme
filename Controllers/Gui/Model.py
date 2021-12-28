@@ -40,8 +40,16 @@ class Model:
         else:
             return self.testingUseCase.getFrameAt(self.testingIndex)
 
-    def setTesting(self, state):
+    def setSettings(self, processing, evaluation):
+        if self.testingIsActive:
+            self.testingUseCase.updateSettings(processing, evaluation)
+
+        else:
+            self.debugUseCase.updateSettings(processing, evaluation)
+
+    def setTesting(self, state, processing, evaluation):
         self.testingIsActive = state
+        self.setSettings(processing, evaluation)
 
     def setTestingIndex(self, index):
         self.testingIndex = index

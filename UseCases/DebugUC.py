@@ -46,7 +46,6 @@ class Debug(QObject):
 
     def updateSettings(self, selectedProcessingStrategy, selectedEvaluatingStrategies):
         self.processingStrategy = selectedProcessingStrategy
-        self.takingPicture.stop()
         del self.takingPicture
         self.startTakingPictures()
         self.evaluationStrategies = selectedEvaluatingStrategies
