@@ -12,7 +12,7 @@ class TestUC:
 
     def updateData(self, selectedData):
         self.frames = selectedData
-        self.calculate()
+        # self.calculate()
 
     def updateSettings(self, selectedProcessingStrategy, selectedEvaluatingStrategies):
         self.processingStrategy = selectedProcessingStrategy

@@ -148,5 +148,5 @@ class View(QMainWindow):
         self.controller.testingTriggered(isActive)
 
     def testingDataChanged(self):
-        dataKey = self.testingGroupbox.currentText()
+        dataKey = self.testingComboBox.currentText()
         self.controller.testingChanged(dataKey)

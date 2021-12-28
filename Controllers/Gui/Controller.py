@@ -88,6 +88,10 @@ class Controller:
 
     def testingChanged(self, testKey: str):
         self.currentTestFileName = testKey
+        self.currentTestIndex = 0
+        self.model.setTestingIndex(self.currentTestIndex)
+        self.model.testingUseCase.updateData(self.testFiles[self.currentTestFileName])
+        self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
 
     def keyPressed(self, keyNumber):
         if keyNumber.key() == Qt.Key_Right:
