@@ -5,6 +5,8 @@ from UseCases.DebugUC import Debug
 from UseCases.TestUC import TestUC
 
 from Controllers.CamerController import CV2Controller
+
+
 class Model:
     allProcessingStrategies: list[IProcessingStrategy]
     allEvaluatingStrategies: list[IEvaluationStrategy]
@@ -53,3 +55,6 @@ class Model:
 
     def setTestingIndex(self, index):
         self.testingIndex = index
+
+    def close(self):
+        self.debugUseCase.close()

@@ -56,7 +56,6 @@ class Controller:
             self.testFiles[self.currentTestFileName]
         )
 
-        app = QApplication(sys.argv)
         self.view = View(
             self,
             list(self.processingStrategies.keys()),
@@ -70,7 +69,7 @@ class Controller:
         self.updateTimer.timeout.connect(self.updateView)
         self.updateTimer.start()
 
-        sys.exit(app.exec_())
+
 
     def updateView(self):
         pictureArray = self.model.getPictureArray()
@@ -115,3 +114,7 @@ class Controller:
         self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
         self.model.setTestingIndex(self.currentTestIndex)
 
+    def close(self):
+        self.updateTimer.stop()
+        self.model.close()
+        sys.exit(0)

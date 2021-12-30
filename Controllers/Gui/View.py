@@ -150,3 +150,7 @@ class View(QMainWindow):
     def testingDataChanged(self):
         dataKey = self.testingComboBox.currentText()
         self.controller.testingChanged(dataKey)
+
+    def closeEvent(self, event):
+        self.controller.close()
+        event.accept()

@@ -72,12 +72,11 @@ class Debug(QObject):
         self.evaluationThread = evaluateThread
 
     def startTakingPictures(self):
-        takingPicture = TakePicture(self.cam, self.fps, self.processingStrategy)
+        self.takingPicture = TakePicture(self.cam, self.fps, self.processingStrategy)
 
-        takingPicture.finished.connect(self.pictureReady)
+        self.takingPicture.finished.connect(self.pictureReady)
 
-        takingPicture.start()
-        self.takingPicture = takingPicture
+        self.takingPicture.start()
 
     @pyqtSlot(list)
     def pictureReady(self, result):
@@ -110,13 +109,13 @@ class Debug(QObject):
     def evaluationFinished(self, outputFrame):
         self.picture = outputFrame
 
-    def __del__(self):
+    def close(self):
         self.takingPicture.stop()
         for processingThread in self.processingThreads:
             processingThread.quit()
-            processingThread.running = False
         self.evaluationThread.quit()
-        self.evaluationThread.running = False
+
+
 
 
 
