@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 
 from Entities import Processing
-from Entities.EvaluationStrategy import *
+from Entities import Evaluating
 
 from Controllers.Gui.View import View
 from Controllers.Gui.Model import Model
@@ -22,9 +22,9 @@ class Controller:
         Processing.TestStrategy("fD = 128", frameDivider=128)
     ]
     allEvaluatingStrategies = [
-        currentFPSandDT(),
-        averageFPSandDT(),
-        showCurrentPositions()
+        Evaluating.currentFPSandDT(),
+        Evaluating.averageFPSandDT(),
+        Evaluating.showCurrentPositions()
     ]
 
     processingStrategies = dict()

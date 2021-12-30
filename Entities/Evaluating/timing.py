@@ -1,26 +1,5 @@
+from .base import IEvaluationStrategy
 import cv2
-from abc import ABC, abstractmethod
-
-
-class IEvaluationStrategy(ABC):
-    @property
-    @abstractmethod
-    def name(self):
-        pass
-
-    @property
-    @abstractmethod
-    def dataPoints(self):
-        pass
-
-    @abstractmethod
-    def evaluate(self, img, positions, times):
-        pass
-
-    def __str__(self):
-        return self.name
-
-
 
 
 class currentFPSandDT(IEvaluationStrategy):
@@ -34,7 +13,6 @@ class currentFPSandDT(IEvaluationStrategy):
 
         def currentFPS():
             return 1 / currentTimeDiff()
-
 
         if times[0] is None:
             return img
@@ -75,19 +53,3 @@ class averageFPSandDT(IEvaluationStrategy):
         cv2.putText(img, debugDt, (20, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
 
         return img
-
-
-class showCurrentPositions(IEvaluationStrategy):
-    name = "Current Position"
-    dataPoints = 1
-
-    def evaluate(self, img, positions, times):
-        position = positions[0]
-        if position[0][0] is not None:
-            cv2.circle(img, (int(position[0][1]), int(position[0][0])), 5, (0, 0, 255), cv2.FILLED)
-        if position[1][0] is not None:
-            cv2.circle(img, (int(position[1][1]), int(position[1][0])), 5, (0, 255, 0), cv2.FILLED)
-        if position[2][0] is not None:
-            cv2.circle(img, (int(position[2][1]), int(position[2][0])), 5, (255, 0, 0), cv2.FILLED)
-        return img
-

@@ -1,5 +1,5 @@
 from Entities.Processing.base import IProcessingStrategy
-from Entities.EvaluationStrategy import IEvaluationStrategy
+from Entities.Evaluating.base import IEvaluationStrategy
 
 from UseCases.DebugUC import Debug
 from UseCases.TestUC import TestUC
