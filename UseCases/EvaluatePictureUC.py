@@ -10,15 +10,15 @@ class EvaluatePicture(QObject):
     def __init__(self, maxCount=50):
         super().__init__()
         self.strategies = None
-        self.storage = ShiftingArray((None, None, None), maxCount=maxCount)
+        self.storage = ShiftingArray((None, None), maxCount=maxCount)
 
     @pyqtSlot(tuple)
     def evaluate(self, data):
         # data = (currectFrame, result, startTime)
 
         if self.storage.full():
-            outputFrame = data[0]
-            self.storage.push(data)
+            currentImg = data[0]
+            self.storage.push((data[1], data[2]))
 
             if self.strategies is not None:
                 for strategy in self.strategies:
@@ -27,11 +27,18 @@ class EvaluatePicture(QObject):
                         print("strategy has too many dataPoints")
                         print(strategy)
                     else:
-                        outputFrame = strategy.evaluate(self.storage.get()[0:neededPoints])
-            self.finished.emit(outputFrame)
+                        storageDatas = self.storage.get()[0:neededPoints]
+                        positions = list()
+                        times = list()
+                        for storageData in storageDatas:
+                            positions.append(storageData[0])
+                            times.append(storageData[1])
+
+                        currentImg = strategy.evaluate(currentImg, positions, times)
+            self.finished.emit(currentImg)
 
         else:
-            self.storage.push(data)
+            self.storage.push((data[1], data[2]))
 
     @pyqtSlot(list)
     def newStrategies(self, strategies):

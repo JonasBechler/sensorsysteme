@@ -1,32 +1,8 @@
-from abc import ABC, abstractmethod
+from .base import IProcessingStrategy
 
 
-class IProcessingStrategy(ABC):
-    @property
-    @abstractmethod
-    def name(self):
-        pass
-
-    @property
-    @abstractmethod
-    def frameDivider(self):
-        pass
-
-    @property
-    @abstractmethod
-    def frameCount(self):
-        pass
-
-    @abstractmethod
-    def calculate(self, frames):
-        pass
-
-    def __str__(self):
-        return self.name
-
-
-class ProcessingStrategy1(IProcessingStrategy):
-    name = "Not declared"
+class TestStrategy(IProcessingStrategy):
+    name = "test"
 
     frameDivider = 32
     frameCount = 2
@@ -64,4 +40,3 @@ class ProcessingStrategy1(IProcessingStrategy):
                                 int(pixelsSum[i][1] * self.frameDivider / pixelsCount[i])]
 
         return pixelsSum
-

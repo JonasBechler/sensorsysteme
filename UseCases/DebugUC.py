@@ -4,7 +4,7 @@ import numpy as np
 
 from PyQt5.QtCore import *
 
-from Entities.ProcessingStrategy import IProcessingStrategy
+from Entities.Processing.base import IProcessingStrategy
 
 from UseCases.TakePictureUC import TakePicture
 from UseCases.ProcessPictureUC import ProcessPicture

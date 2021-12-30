@@ -6,7 +6,7 @@ from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtWidgets import QApplication
 
 
-from Entities.ProcessingStrategy import *
+from Entities import Processing
 from Entities.EvaluationStrategy import *
 
 from Controllers.Gui.View import View
@@ -18,8 +18,8 @@ class Controller:
     model: Model
 
     allProcessingStrategies = [
-        ProcessingStrategy1("fD = 64", frameDivider=64),
-        ProcessingStrategy1("fD = 128", frameDivider=128)
+        Processing.TestStrategy("fD = 64", frameDivider=64),
+        Processing.TestStrategy("fD = 128", frameDivider=128)
     ]
     allEvaluatingStrategies = [
         currentFPSandDT(),
@@ -69,10 +69,10 @@ class Controller:
         self.updateTimer.setInterval(int(1 / 30))
         self.updateTimer.timeout.connect(self.updateView)
         self.updateTimer.start()
+
         sys.exit(app.exec_())
 
     def updateView(self):
-
         pictureArray = self.model.getPictureArray()
         self.view.setPicture(pictureArray)
 

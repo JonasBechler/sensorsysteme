@@ -1,4 +1,4 @@
-from Entities.ProcessingStrategy import IProcessingStrategy
+from Entities.Processing.base import IProcessingStrategy
 from Entities.EvaluationStrategy import IEvaluationStrategy
 
 from UseCases.DebugUC import Debug

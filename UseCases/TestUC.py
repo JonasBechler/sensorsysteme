@@ -6,15 +6,18 @@ from Entities.ShiftingArray import ShiftingArray
 
 class TestUC:
     def __init__(self, data, selectedProcessingStrategy, selectedEvaluatingStrategies):
-        self.frames = data
+        self.inputFrames = data
         self.processingStrategy = selectedProcessingStrategy
         self.evaluatingStrategies = selectedEvaluatingStrategies
 
+        self.outputFrames = data.copy()
+
     def getFrameAt(self, index):
-        return self.frames[index]
+        return self.outputFrames[index]
 
     def updateData(self, selectedData):
-        self.frames = selectedData
+        self.inputFrames = selectedData
+        self.outputFrames = selectedData.copy()
         self.calculate()
 
     def updateSettings(self, selectedProcessingStrategy, selectedEvaluatingStrategies):
@@ -24,17 +27,17 @@ class TestUC:
 
     def calculate(self):
         strategy = self.processingStrategy
-        processingOutLen = len(self.frames) - (strategy.frameCount-1)
+        processingOutLen = len(self.inputFrames) - (strategy.frameCount - 1)
         processingResults = ShiftingArray(None, maxCount=processingOutLen)
 
         resizedFrames = list()
-        cameraResolution = (self.frames[0].shape[0], self.frames[0].shape[1])
+        cameraResolution = (self.inputFrames[0].shape[0], self.inputFrames[0].shape[1])
         resizedResolution = (
             int(cameraResolution[0] / self.processingStrategy.frameDivider),
             int(cameraResolution[1] / self.processingStrategy.frameDivider)
         )
 
-        for frame in self.frames:
+        for frame in self.inputFrames:
             imgBuffer = Image.fromarray(frame, 'RGB')
             imgBuffer = imgBuffer.resize(resizedResolution)
             resizedFrames.append(np.array(imgBuffer))
@@ -45,11 +48,12 @@ class TestUC:
 
         evalStrategies = self.evaluatingStrategies
         for i in range(processingOutLen):
-            frame = self.frames[i]
+            frame = self.inputFrames[i].copy()
             for evalStrategy in evalStrategies:
                 neededPoints = evalStrategy.dataPoints
                 availablePoints = processingOutLen - 1 - i
                 if neededPoints < availablePoints:
-                    frame = evalStrategy.evaluate((frame, (processingResults.get()[i:i+neededPoints]), None))
-            self.frames[i] = frame
+                    evalData = processingResults.get()[i:i+neededPoints]
+                    frame = evalStrategy.evaluate(frame, evalData, [None]*neededPoints)
+            self.outputFrames[i] = frame
 
