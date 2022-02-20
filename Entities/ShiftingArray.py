@@ -5,7 +5,7 @@ class ShiftingArray:
         self.elements = [objectT]*maxCount
 
     def get(self):
-        return self.elements
+        return self.elements.copy()
 
     def push(self, element):
         del self.elements[self.maxCount-1]

@@ -12,7 +12,7 @@ cam = CV2Controller()
 class CreateTestFile(QtWidgets.QWidget):
     i = 0
     data = list()
-    dataLen = 50
+    dataLen = 100
 
     def __init__(self):
         super().__init__()
@@ -21,6 +21,17 @@ class CreateTestFile(QtWidgets.QWidget):
         name = input()
         _ = cam.takePicture()
         _ = cam.takePicture()
+        print("5")
+        time.sleep(1)
+        print("4")
+        time.sleep(1)
+        print("3")
+        time.sleep(1)
+        print("2")
+        time.sleep(1)
+        print("1")
+        time.sleep(1)
+        print("start")
 
         self.delayTime = int(1000/30)
 

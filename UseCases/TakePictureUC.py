@@ -44,7 +44,7 @@ class TakePicture(QObject):
     def _init(self):
         img, time = self.camera.takePicture()
 
-        self.cameraResolution = (img.shape[0], img.shape[1])
+        self.cameraResolution = (img.shape[1], img.shape[0])
         self.resizedResolution = (
             int(self.cameraResolution[0] / self.strategy.frameDivider),
             int(self.cameraResolution[1] / self.strategy.frameDivider)

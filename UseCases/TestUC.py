@@ -31,7 +31,7 @@ class TestUC:
         processingResults = ShiftingArray(None, maxCount=processingOutLen)
 
         resizedFrames = list()
-        cameraResolution = (self.inputFrames[0].shape[0], self.inputFrames[0].shape[1])
+        cameraResolution = (self.inputFrames[0].shape[1], self.inputFrames[0].shape[0])
         resizedResolution = (
             int(cameraResolution[0] / self.processingStrategy.frameDivider),
             int(cameraResolution[1] / self.processingStrategy.frameDivider)
@@ -42,6 +42,7 @@ class TestUC:
             imgBuffer = imgBuffer.resize(resizedResolution)
             resizedFrames.append(np.array(imgBuffer))
 
+
         for i in range(processingOutLen):
             usedFrames = resizedFrames[i:i+strategy.frameCount]
             processingResults.push(strategy.calculate(usedFrames))
@@ -51,9 +52,12 @@ class TestUC:
             frame = self.inputFrames[i].copy()
             for evalStrategy in evalStrategies:
                 neededPoints = evalStrategy.dataPoints
-                availablePoints = processingOutLen - 1 - i
-                if neededPoints < availablePoints:
-                    evalData = processingResults.get()[i:i+neededPoints]
+                availablePoints = i
+                if neededPoints <= availablePoints:
+                    evalData = processingResults.get()
+                    evalData.reverse()
+                    evalData = evalData[i-neededPoints:i]
+                    evalData.reverse()
                     frame = evalStrategy.evaluate(frame, evalData, [None]*neededPoints)
             self.outputFrames[i] = frame
 

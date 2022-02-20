@@ -18,13 +18,24 @@ class Controller:
     model: Model
 
     allProcessingStrategies = [
-        Processing.TestStrategy("fD = 64", frameDivider=64),
-        Processing.TestStrategy("fD = 128", frameDivider=128)
+        Processing.FinalStrategy("final", frameDivider=16)
     ]
     allEvaluatingStrategies = [
+        Evaluating.frameDivider(frameDivider=8),
+        Evaluating.frameDivider(frameDivider=16),
+        Evaluating.frameDivider(frameDivider=32),
+        Evaluating.showSilhouette(),
         Evaluating.currentFPSandDT(),
         Evaluating.averageFPSandDT(),
-        Evaluating.showCurrentPositions()
+        Evaluating.showCurrentPositions(),
+        Evaluating.showLastNPositions(),
+        Evaluating.showAveragePositions(),
+        Evaluating.showAveragePositionsCoordinates(),
+        Evaluating.showLastNPositionsSmooth(),
+        Evaluating.speedUpDownTimes(),
+        Evaluating.speedUpDownScore(),
+        Evaluating.straightScore()
+
     ]
 
     processingStrategies = dict()
@@ -42,18 +53,16 @@ class Controller:
         # testing
         self.testFolderPath = "TestFiles"
         self.testFileNames = os.listdir(self.testFolderPath)
-        self.testFiles = dict()
-        for name in self.testFileNames:
-            with open(self.testFolderPath + "/" + name, "rb") as f:
-                self.testFiles[name] = pickle.load(f)
 
         self.currentTestFileName = self.testFileNames[0]
         self.currentTestIndex = 0
+        with open(self.testFolderPath + "/" + self.currentTestFileName, "rb") as f:
+            self.currentTest = pickle.load(f)
 
         self.model = Model(
             self.selectedProcessingStrategy,
             self.selectedEvaluatingStrategies,
-            self.testFiles[self.currentTestFileName]
+            self.currentTest
         )
 
         self.view = View(
@@ -62,7 +71,7 @@ class Controller:
             list(self.evaluationStrategies.keys()),
             self.testFileNames
         )
-        self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+        self.view.setTestsLable(self.currentTestIndex, len(self.currentTest))
 
         self.updateTimer = QTimer()
         self.updateTimer.setInterval(int(1 / 30))
@@ -70,6 +79,9 @@ class Controller:
         self.updateTimer.start()
 
 
+    def loadTestFile(self, name):
+        with open(self.testFolderPath + "/" + name, "rb") as f:
+            self.currentTest = pickle.load(f)
 
     def updateView(self):
         pictureArray = self.model.getPictureArray()
@@ -88,30 +100,36 @@ class Controller:
         self.model.setSettings(self.selectedProcessingStrategy, self.selectedEvaluatingStrategies)
 
     def testingTriggered(self, isActive):
+        if isActive:
+            self.model.debugUseCase.takingPicture.stop()
+        else:
+            self.model.debugUseCase.takingPicture.start()
         self.model.setTesting(
             isActive,
             self.selectedProcessingStrategy,
             self.selectedEvaluatingStrategies)
 
+
     def testingChanged(self, testKey: str):
         self.currentTestFileName = testKey
+        self.loadTestFile(self.currentTestFileName)
         self.currentTestIndex = 0
         self.model.setTestingIndex(self.currentTestIndex)
-        self.model.testingUseCase.updateData(self.testFiles[self.currentTestFileName])
-        self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+        self.model.testingUseCase.updateData(self.currentTest)
+        self.view.setTestsLable(self.currentTestIndex, len(self.currentTest))
 
     def keyPressed(self, keyNumber):
-        if keyNumber.key() == Qt.Key_Right:
-            if self.currentTestIndex > 0:
-                self.currentTestIndex = self.currentTestIndex - 1
-                self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+        if keyNumber == Qt.Key_Right:
+            self.currentTestIndex = self.currentTestIndex - 1
+            if self.currentTestIndex < 0:
+                self.currentTestIndex = len(self.currentTest)-1
 
-        if keyNumber.key() == Qt.Key_Left:
-            if self.currentTestIndex < len(self.testFiles[self.currentTestFileName]) - 1:
-                self.currentTestIndex = self.currentTestIndex + 1
-                self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+        if keyNumber == Qt.Key_Left:
+            self.currentTestIndex = self.currentTestIndex + 1
+            if self.currentTestIndex >= len(self.currentTest):
+                self.currentTestIndex = 0
 
-        self.view.setTestsLable(self.currentTestIndex, len(self.testFiles[self.currentTestFileName]))
+        self.view.setTestsLable(self.currentTestIndex, len(self.currentTest))
         self.model.setTestingIndex(self.currentTestIndex)
 
     def close(self):

@@ -15,11 +15,15 @@ class currentFPSandDT(IEvaluationStrategy):
             return 1 / currentTimeDiff()
 
         if times[0] is None:
-            return img
-        debugFps = "fps: " + ('%.3f' % currentFPS())
-        debugDt = "dt: " + ('%.3f' % (currentTimeDiff() * 1000))
-        cv2.putText(img, debugFps, (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
-        cv2.putText(img, debugDt, (20, 40), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
+            debugFps = "fps: " + ('%.3f' % 30)
+            debugDt = "dt: " + ('%.3f' % (1/30 * 1000))
+        else:
+            debugFps = "fps: " + ('%.3f' % currentFPS())
+            debugDt = "dt: " + ('%.3f' % (currentTimeDiff() * 1000))
+        cv2.rectangle(img, (0, 0), (250, 45), (255, 255, 255), -1)
+        cv2.rectangle(img, (0, 0), (250, 45), (0, 0, 0), 1)
+        cv2.putText(img, debugFps, (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1)
+        cv2.putText(img, debugDt, (20, 40), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1)
 
         return img
 
@@ -44,12 +48,15 @@ class averageFPSandDT(IEvaluationStrategy):
             return timeSum
 
         if times[0] is None:
-            return img
+            debugFps = "fpsAv: " + ('%.3f' % 30)
+            debugDt = "dtAv: " + ('%.3f' % (1/30 * 1000))
+        else:
+            debugFps = "fpsAv: " + ('%.3f' % averageFPS())
+            debugDt = "dtAv: " + ('%.3f' % (averageTimeDiff() * 1000))
 
-        debugFps = "fpsAv: " + ('%.3f' % averageFPS())
-        debugDt = "dtAv: " + ('%.3f' % (averageTimeDiff() * 1000))
-
-        cv2.putText(img, debugFps, (20, 60), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
-        cv2.putText(img, debugDt, (20, 80), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
+        cv2.rectangle(img, (0, 45), (250, 85), (255, 255, 255), -1)
+        cv2.rectangle(img, (0, 45), (250, 85), (0, 0, 0), 1)
+        cv2.putText(img, debugFps, (20, 60), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1)
+        cv2.putText(img, debugDt, (20, 80), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 1)
 
         return img

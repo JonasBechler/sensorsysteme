@@ -59,7 +59,7 @@ class Debug(QObject):
             self.processings.append(None)
 
     def initEval(self):
-        evaluate = EvaluatePicture(maxCount=50)
+        evaluate = EvaluatePicture()
         evaluateThread = QThread(parent=self)
         evaluate.moveToThread(evaluateThread)
 
@@ -73,9 +73,7 @@ class Debug(QObject):
 
     def startTakingPictures(self):
         self.takingPicture = TakePicture(self.cam, self.fps, self.processingStrategy)
-
         self.takingPicture.finished.connect(self.pictureReady)
-
         self.takingPicture.start()
 
     @pyqtSlot(list)
@@ -103,7 +101,6 @@ class Debug(QObject):
         currentFrame, result, time = result
 
         self.evaluationStartSignal.emit((currentFrame, result, time))
-
 
     @pyqtSlot(tuple)
     def evaluationFinished(self, outputFrame):

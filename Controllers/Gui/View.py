@@ -1,9 +1,10 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
 # from Controllers.Gui.Controller import Controller
+import Controllers.Gui
 
 
 class View(QMainWindow):
@@ -35,10 +36,12 @@ class View(QMainWindow):
         # picture Output
         self.picture = QLabel()
         self.picture.setObjectName("pictureOutput")
+        self.picture.setFixedSize(1280, 720)
+
 
         # settings Widget
         self.settings = QWidget()
-        self.picture.setObjectName("settingsInput")
+        self.settings.setObjectName("settingsInput")
         settingsLayout = QVBoxLayout()
 
         # settings 1
@@ -82,6 +85,13 @@ class View(QMainWindow):
         self.testingComboBox.addItems(availableTests)
         self.testingComboBox.currentIndexChanged.connect(self.testingDataChanged)
         testingLayout.addWidget(self.testingComboBox)
+        self.continuousCkeckbox = QCheckBox()
+        self.continuousCkeckbox.setText("Continuous")
+        self.continuousCkeckbox.clicked.connect(self.testContinuousAction)
+        #self.continuousRadioButton.acti
+        testingLayout.addWidget(self.continuousCkeckbox)
+
+
         self.testingGroupbox.setLayout(testingLayout)
         settingsLayout.addWidget(self.testingGroupbox)
 
@@ -99,15 +109,37 @@ class View(QMainWindow):
         self.setCentralWidget(mainWidget)
         self.show()
 
+        self.testContinuousTimer = QTimer()
+        self.testContinuousTimer.setInterval(1000/30)
+        self.testContinuousTimer.timeout.connect(self.testContinuous)
+
+    def testContinuous(self):
+        self.controller.keyPressed(Qt.Key_Left)
+
+    def testContinuousAction(self):
+        if self.continuousCkeckbox.isChecked():
+            self.testContinuousTimer.start()
+        else:
+            self.testContinuousTimer.stop()
+
+
     def keyPressEvent(self, e):
-        self.controller.keyPressed(e)
+        self.controller.keyPressed(e.key())
 
     # used by Controller
     def setPicture(self, pictureArray):
-        h, w, ch = pictureArray.shape
-        bytes_per_line = ch * w
-        image = QImage(pictureArray.data, w, h, bytes_per_line, QImage.Format_RGB888)
-        self.picture.setPixmap(QPixmap.fromImage(image))
+
+        try:
+            h, w, ch = pictureArray.shape
+            bytes_per_line = ch * w
+            image = QImage(pictureArray.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            image = QPixmap.fromImage(image)
+
+
+            #image = image.scaled(QSize(w * 32, h * 32))
+            self.picture.setPixmap(image)
+        except:
+            pass
 
     def setAvailableProcessings(self, strategies: list[str]) -> None:
         self.processingComboBox.clear()

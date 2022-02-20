@@ -1,4 +1,5 @@
 import math
+import random
 
 
 def function(*args, **kwargs):
@@ -28,6 +29,6 @@ def calc():
 
 
 if __name__ == '__main__':
-    hyp = 189
-    angle = 15/360*math.pi
-    math.cos(angle)*hyp
+    while True:
+        x = math.sqrt(random.random()*1000)
+        print(x)

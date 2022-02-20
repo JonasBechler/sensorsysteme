@@ -1,43 +1,53 @@
+import numpy as np
+import cv2
+
 from .base import IProcessingStrategy
 
 
 class SimpleStrategy(IProcessingStrategy):
     name = "Not declared"
 
-    frameDivider = 32
+    frameDivider = 1
     frameCount = 2
 
-    strengthThreshold = [100, 100, 100]
-    countThreshold = [5, 5, 5]
-
-    def __init__(self, name, frameDivider=32, strengthThreshold=None, countThreshold=None):
-        self.name = name
+    def __init__(self, name, frameDivider=32, intensityThresholdMax=240, intensityThresholdMin=220):
+        self.name = f"{name} {frameDivider},{intensityThresholdMax},{intensityThresholdMin}"
         self.frameDivider = frameDivider
-        if strengthThreshold is not None:
-            self.strengthThreshold = strengthThreshold
-        if countThreshold is not None:
-            self.countThreshold = countThreshold
+        self.intensityThresholdMax = intensityThresholdMax
+        self.intensityThresholdMin = intensityThresholdMin
 
-    def calculate(self, frames):
+    def calculate(self, frames) -> [[float, float], [float, float], [float, float]]:
+        def evaluate(pixel):
+            pixelSorted = pixel.copy()
+            pixelSorted.sort()
+            if pixelSorted[1] == pixelSorted[2]:
+                return None
+            highesIndex = np.where(pixel == pixelSorted[2])
+            middleIndex = np.where(pixel == pixelSorted[1])
 
-        frameDifference = frames[0] - frames[1]
-        pixelsCount = [0, 0, 0]
-        pixelsSum = [[0, 0], [0, 0], [0, 0]]
-        for y in range(frameDifference.shape[0]-1):
-            for x in range(frameDifference.shape[1]-1):
-                pixel = frameDifference[y, x, :]
-                for i in range(3):
-                    if abs(pixel[i]) > self.strengthThreshold[i]:
-                        pixelsCount[i] = pixelsCount[i] + 1
-                        pixelsSum[i][0] = pixelsSum[i][0] + x
-                        pixelsSum[i][1] = pixelsSum[i][1] + y
+            if pixel[middleIndex[0][0]] < self.intensityThresholdMin:
+                return highesIndex[0][0]
+            return None
+
+        currentPic = np.array(frames[0]).astype(int)
+        lastPic = np.array(frames[1]).astype(int)
+        diffPic = currentPic - lastPic
+        diffPic = np.absolute(diffPic)
+        indexes = np.where((diffPic > self.intensityThresholdMax))
+
+        pixelCount = [0, 0, 0]
+        pixelIndexSum = np.zeros((3, 2))
+        for i in range(len(indexes[0])):
+            pixel = diffPic[indexes[0][i]][indexes[1][i]]
+            retVal = evaluate(pixel)
+            if retVal is not None:
+                pixelCount[retVal] = pixelCount[retVal]+1
+                pixelIndexSum[retVal][0] = pixelIndexSum[retVal][0] + indexes[0][i]
+                pixelIndexSum[retVal][1] = pixelIndexSum[retVal][1] + indexes[1][i]
 
         for i in range(3):
-            if pixelsCount[i] < self.countThreshold[i]:
-                pixelsSum[i] = [None, None]
-            else:
-                pixelsSum[i] = [int(pixelsSum[i][0] * self.frameDivider / pixelsCount[i]),
-                                int(pixelsSum[i][1] * self.frameDivider / pixelsCount[i])]
+            if pixelCount[i] != 0:
+                pixelIndexSum[i][0] = pixelIndexSum[i][0] / pixelCount[i] * self.frameDivider
+                pixelIndexSum[i][1] = pixelIndexSum[i][1] / pixelCount[i] * self.frameDivider
 
-        return pixelsSum
-
+        return pixelIndexSum

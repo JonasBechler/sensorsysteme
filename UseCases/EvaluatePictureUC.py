@@ -7,7 +7,7 @@ from Entities.ShiftingArray import ShiftingArray
 class EvaluatePicture(QObject):
     finished = pyqtSignal(numpy.ndarray)
 
-    def __init__(self, maxCount=50):
+    def __init__(self, maxCount=200):
         super().__init__()
         self.strategies = None
         self.storage = ShiftingArray((None, None), maxCount=maxCount)
@@ -20,7 +20,7 @@ class EvaluatePicture(QObject):
             currentImg = data[0]
             self.storage.push((data[1], data[2]))
 
-            if self.strategies is not None:
+            if self.strategies:
                 for strategy in self.strategies:
                     neededPoints = strategy.dataPoints
                     if neededPoints > self.storage.maxCount:
