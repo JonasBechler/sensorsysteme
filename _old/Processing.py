@@ -1,7 +1,8 @@
+import sys
+import threading
+
 import numpy as np
 from PIL import Image
-import threading
-import sys
 
 
 def resize(data, size):

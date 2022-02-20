@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
-from PyQt5.QtCore import *
-from PIL import Image
-import time
+
 import numpy as np
-
-
+from PIL import Image
+from PyQt5.QtCore import *
 
 from Entities.ShiftingArray import ShiftingArray
+
 
 class ICameraController(ABC):
     @abstractmethod
@@ -31,7 +30,7 @@ class TakePicture(QObject):
         self.camera = cam
         self.strategy = strategy
         self.timer = QTimer()
-        self.timer.setInterval(int(1000/fps))
+        self.timer.setInterval(int(1000 / fps))
         self.timer.timeout.connect(self._loop)
 
     def start(self):
@@ -79,17 +78,3 @@ class TakePicture(QObject):
         res = img, self.frames.get(), time
         res = list(res)
         self.finished.emit(res)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,14 +1,11 @@
-import os
 import queue
 import time
 import unittest
-import pickle
-import numpy as np
 
 import TestSamples.SampleAccess
+from Controllers.CamerController import CV2Controller
 from Entities.PreProcessing import PreProcessing
 from Entities.ProcessingStrategy import ProcessingStrategy1
-from Controllers.CamerController import CV2Controller
 
 
 class PreProcessingTests(unittest.TestCase, TestSamples.SampleAccess.SampleAccess):
@@ -49,7 +46,7 @@ class PreProcessingTests(unittest.TestCase, TestSamples.SampleAccess.SampleAcces
 class ProcessingTests(unittest.TestCase):
 
     def setUp(self):
-        #self.thread = Processing(None, None, ProcessingStrategy1(), CV2Controller())
+        # self.thread = Processing(None, None, ProcessingStrategy1(), CV2Controller())
         self.preP = PreProcessing(self.thread, ProcessingStrategy1(), CV2Controller())
 
     def testInit(self):
@@ -66,7 +63,6 @@ class ProcessingTests(unittest.TestCase):
 
     def tearDown(self):
         pass
-
 
 
 if __name__ == '__main__':

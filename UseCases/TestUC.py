@@ -42,9 +42,8 @@ class TestUC:
             imgBuffer = imgBuffer.resize(resizedResolution)
             resizedFrames.append(np.array(imgBuffer))
 
-
         for i in range(processingOutLen):
-            usedFrames = resizedFrames[i:i+strategy.frameCount]
+            usedFrames = resizedFrames[i:i + strategy.frameCount]
             processingResults.push(strategy.calculate(usedFrames))
 
         evalStrategies = self.evaluatingStrategies
@@ -56,8 +55,7 @@ class TestUC:
                 if neededPoints <= availablePoints:
                     evalData = processingResults.get()
                     evalData.reverse()
-                    evalData = evalData[i-neededPoints:i]
+                    evalData = evalData[i - neededPoints:i]
                     evalData.reverse()
-                    frame = evalStrategy.evaluate(frame, evalData, [None]*neededPoints)
+                    frame = evalStrategy.evaluate(frame, evalData, [None] * neededPoints)
             self.outputFrames[i] = frame
-

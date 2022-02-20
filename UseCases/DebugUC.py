@@ -1,14 +1,10 @@
-import time
 import numpy as np
-
-
 from PyQt5.QtCore import *
 
 from Entities.Processing.base import IProcessingStrategy
-
-from UseCases.TakePictureUC import TakePicture
-from UseCases.ProcessPictureUC import ProcessPicture
 from UseCases.EvaluatePictureUC import EvaluatePicture
+from UseCases.ProcessPictureUC import ProcessPicture
+from UseCases.TakePictureUC import TakePicture
 
 
 class Debug(QObject):
@@ -32,7 +28,7 @@ class Debug(QObject):
     def __init__(self, cam, processingStrategy):
         super().__init__()
         self.cam = cam
-        self.picture = np.zeros(720*1280*3)
+        self.picture = np.zeros(720 * 1280 * 3)
         self.picture = self.picture.reshape((720, 1280, 3))
         self.processingStrategy = processingStrategy
         self.processingTreadsSize = 10
@@ -111,13 +107,3 @@ class Debug(QObject):
         for processingThread in self.processingThreads:
             processingThread.quit()
         self.evaluationThread.quit()
-
-
-
-
-
-
-
-
-
-

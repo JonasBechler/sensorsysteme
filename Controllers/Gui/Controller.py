@@ -3,14 +3,11 @@ import pickle
 import sys
 
 from PyQt5.QtCore import QTimer, Qt
-from PyQt5.QtWidgets import QApplication
 
-
-from Entities import Processing
-from Entities import Evaluating
-
-from Controllers.Gui.View import View
 from Controllers.Gui.Model import Model
+from Controllers.Gui.View import View
+from Entities import Evaluating
+from Entities import Processing
 
 
 class Controller:
@@ -78,7 +75,6 @@ class Controller:
         self.updateTimer.timeout.connect(self.updateView)
         self.updateTimer.start()
 
-
     def loadTestFile(self, name):
         with open(self.testFolderPath + "/" + name, "rb") as f:
             self.currentTest = pickle.load(f)
@@ -109,7 +105,6 @@ class Controller:
             self.selectedProcessingStrategy,
             self.selectedEvaluatingStrategies)
 
-
     def testingChanged(self, testKey: str):
         self.currentTestFileName = testKey
         self.loadTestFile(self.currentTestFileName)
@@ -122,7 +117,7 @@ class Controller:
         if keyNumber == Qt.Key_Right:
             self.currentTestIndex = self.currentTestIndex - 1
             if self.currentTestIndex < 0:
-                self.currentTestIndex = len(self.currentTest)-1
+                self.currentTestIndex = len(self.currentTest) - 1
 
         if keyNumber == Qt.Key_Left:
             self.currentTestIndex = self.currentTestIndex + 1

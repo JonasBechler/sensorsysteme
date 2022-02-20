@@ -1,18 +1,12 @@
-#Import the required library
+# Import the required library
 from random import randint
-
-import queue
+from time import time
 from tkinter import *
-from PIL import Image, ImageTk
 from tkinter import ttk
 
+from PIL import Image, ImageTk
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
-
-from time import time
-
-from UseCases.UseCases import UCnormalUse
-from Controllers.CamerController import CV2Controller
 
 
 class TkinterUI(IUiController, Tk):
@@ -25,10 +19,9 @@ class TkinterUI(IUiController, Tk):
         while self.outputQueue.empty():
             pass
         img = self.outputQueue.get()
-        size = str(img.shape[1]+200) + "x" + str(img.shape[0])
+        size = str(img.shape[1] + 200) + "x" + str(img.shape[0])
 
         self.tk.geometry(size)
-
 
         img = Image.fromarray(img)
         img = ImageTk.PhotoImage(img)
@@ -46,10 +39,8 @@ class TkinterUI(IUiController, Tk):
 
     def setupInterface(self, size):
         self.picture = Label(self, width=size[0], height=size[1]).pack(side=LEFT)
-        self.output = Label(self, width=150, height=int(size[1]/2)).pack(side=RIGHT)
-        self.setting = Label(self, width=150, height=int(size[1]/2)).pack(side=RIGHT)
-
-
+        self.output = Label(self, width=150, height=int(size[1] / 2)).pack(side=RIGHT)
+        self.setting = Label(self, width=150, height=int(size[1] / 2)).pack(side=RIGHT)
 
     # Define a Function to update to Image
     def update_img(self):
@@ -67,12 +58,11 @@ if __name__ == '__main__':
     ui.init()
 
 
-class QtUI(QtWidgets.QMainWindow, IUiController,):
+class QtUI(QtWidgets.QMainWindow, IUiController, ):
     flex_widget: FlexPlotWidget
 
     def __init__(self, *args, **kwargs):
         super(QtUI, self).__init__(*args, **kwargs)
-
 
         self.setWindowTitle("Live Plotting Sensor Data")
         self.flex_widget = FlexPlotWidget(time_span=5, interval=10)
@@ -84,7 +74,6 @@ class QtUI(QtWidgets.QMainWindow, IUiController,):
         self.timer.start()
 
         self.time_init = time()
-
 
     def update_plot_data(self):
         self.flex_widget.add_data(x=time() - self.time_init,
@@ -99,6 +88,3 @@ if __name__ == '__main__':
     w = QtUI()
     w.show()
     sys.exit(app.exec_())
-
-
-

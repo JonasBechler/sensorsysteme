@@ -2,9 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-
 # from Controllers.Gui.Controller import Controller
-import Controllers.Gui
 
 
 class View(QMainWindow):
@@ -37,7 +35,6 @@ class View(QMainWindow):
         self.picture = QLabel()
         self.picture.setObjectName("pictureOutput")
         self.picture.setFixedSize(1280, 720)
-
 
         # settings Widget
         self.settings = QWidget()
@@ -88,9 +85,8 @@ class View(QMainWindow):
         self.continuousCkeckbox = QCheckBox()
         self.continuousCkeckbox.setText("Continuous")
         self.continuousCkeckbox.clicked.connect(self.testContinuousAction)
-        #self.continuousRadioButton.acti
+        # self.continuousRadioButton.acti
         testingLayout.addWidget(self.continuousCkeckbox)
-
 
         self.testingGroupbox.setLayout(testingLayout)
         settingsLayout.addWidget(self.testingGroupbox)
@@ -110,7 +106,7 @@ class View(QMainWindow):
         self.show()
 
         self.testContinuousTimer = QTimer()
-        self.testContinuousTimer.setInterval(1000/30)
+        self.testContinuousTimer.setInterval(1000 / 30)
         self.testContinuousTimer.timeout.connect(self.testContinuous)
 
     def testContinuous(self):
@@ -121,7 +117,6 @@ class View(QMainWindow):
             self.testContinuousTimer.start()
         else:
             self.testContinuousTimer.stop()
-
 
     def keyPressEvent(self, e):
         self.controller.keyPressed(e.key())
@@ -135,8 +130,7 @@ class View(QMainWindow):
             image = QImage(pictureArray.data, w, h, bytes_per_line, QImage.Format_RGB888)
             image = QPixmap.fromImage(image)
 
-
-            #image = image.scaled(QSize(w * 32, h * 32))
+            # image = image.scaled(QSize(w * 32, h * 32))
             self.picture.setPixmap(image)
         except:
             pass
@@ -160,7 +154,7 @@ class View(QMainWindow):
         self.testingComboBox.addItems(tests)
 
     def setTestsLable(self, currentIndex, maxIndex) -> None:
-        self.testingLable.setText(str(currentIndex+1)+"/"+str(maxIndex))
+        self.testingLable.setText(str(currentIndex + 1) + "/" + str(maxIndex))
 
     # on input. connects controller
     def processingStrategiesChanged(self):

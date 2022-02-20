@@ -1,7 +1,7 @@
-from PyQt5.QtCore import *
+from Entities.PostProcessing import *
 from Entities.PreProcessing import *
 from Entities.ProcessingStrategy import *
-from Entities.PostProcessing import *
+from PyQt5.QtCore import *
 
 
 # the user starts the program
@@ -27,6 +27,3 @@ class UCSeePicture(QObject):
 
     def show(self, img):
         self.trigger.emit(img)
-
-
-

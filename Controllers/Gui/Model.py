@@ -1,10 +1,8 @@
-from Entities.Processing.base import IProcessingStrategy
+from Controllers.CamerController import CV2Controller
 from Entities.Evaluating.base import IEvaluationStrategy
-
+from Entities.Processing.base import IProcessingStrategy
 from UseCases.DebugUC import Debug
 from UseCases.TestUC import TestUC
-
-from Controllers.CamerController import CV2Controller
 
 
 class Model:

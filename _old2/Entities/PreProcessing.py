@@ -1,16 +1,14 @@
 import time
-import threading
-import sys
-import numpy as np
-from PIL import Image
 from abc import ABC, abstractmethod
+
+import numpy as np
+from Entities.ProcessingStrategy import IProcessingStrategy
+from PIL import Image
 from PyQt5.QtCore import *
+from TestSamples.SampleAccess import SampleAccess
 
 from Entities.Processing import QProcessing
-from Entities.ProcessingStrategy import IProcessingStrategy
 from Entities.ShiftingArray import ShiftingArray
-
-from TestSamples.SampleAccess import SampleAccess
 
 
 class ICameraController(ABC):
@@ -24,7 +22,7 @@ class ICameraController(ABC):
 
 
 class PreProcessing(SampleAccess):
-    def __init__(self, strategy: IProcessingStrategy, camera: ICameraController, targetDeltaT=1/30):
+    def __init__(self, strategy: IProcessingStrategy, camera: ICameraController, targetDeltaT=1 / 30):
         super().__init__()
         self.strategy = strategy
         self.camera = camera
@@ -80,7 +78,8 @@ class PreProcessing(SampleAccess):
 
 
 class QPreProcessing(QThread):
-    def __init__(self, strategy: IProcessingStrategy, camera: ICameraController, targetFunction, targetFPS=30, *args, **kwargs):
+    def __init__(self, strategy: IProcessingStrategy, camera: ICameraController, targetFunction, targetFPS=30, *args,
+                 **kwargs):
         QThread.__init__(self, *args, **kwargs)
         self.targetFunction = targetFunction
         self.pre = PreProcessing(strategy, camera)
@@ -88,12 +87,10 @@ class QPreProcessing(QThread):
         processingThreadT = QProcessing(img, frames, strategy, time, self.targetFunction)
         self.threads = ShiftingArray(processingThreadT)
 
-        self.targetDeltaT = int(1/targetFPS*1000)
+        self.targetDeltaT = int(1 / targetFPS * 1000)
         self.timer = QTimer()
         self.timer.moveToThread(self)
         self.timer.timeout.connect(self.PreProcessingLoop)
-
-
 
     def PreProcessingLoop(self):
         img, frames, strategy, currentTime = self.pre.loop()
@@ -101,15 +98,7 @@ class QPreProcessing(QThread):
         thread.start()
         self.threads.push(thread)
 
-
     def run(self):
-
         self.timer.start(100)  # int(1000/self.targetDeltaT))
         loop = QEventLoop()
         loop.exec_()
-
-
-
-
-
-

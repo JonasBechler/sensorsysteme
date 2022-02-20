@@ -1,5 +1,4 @@
 import numpy as np
-import cv2
 
 from .base import IProcessingStrategy
 
@@ -41,7 +40,7 @@ class SimpleStrategy(IProcessingStrategy):
             pixel = diffPic[indexes[0][i]][indexes[1][i]]
             retVal = evaluate(pixel)
             if retVal is not None:
-                pixelCount[retVal] = pixelCount[retVal]+1
+                pixelCount[retVal] = pixelCount[retVal] + 1
                 pixelIndexSum[retVal][0] = pixelIndexSum[retVal][0] + indexes[0][i]
                 pixelIndexSum[retVal][1] = pixelIndexSum[retVal][1] + indexes[1][i]
 

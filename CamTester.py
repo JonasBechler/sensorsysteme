@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import cv2
 import time
+
+import cv2
 
 if __name__ == '__main__':
 
@@ -41,9 +42,8 @@ if __name__ == '__main__':
     print("Time taken : {0} seconds".format(seconds))
 
     # Calculate frames per second
-    fps  = num_frames / seconds
+    fps = num_frames / seconds
     print("Estimated frames per second : {0}".format(fps))
 
     # Release video
     video.release()
-

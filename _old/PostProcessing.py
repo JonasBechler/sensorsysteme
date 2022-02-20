@@ -1,9 +1,9 @@
-from StorageArray import StorageArray
 import sys
-import time
 
 import cv2
-import numpy as np
+
+from StorageArray import StorageArray
+
 
 class PostProcessing:
     def __init__(self, threadBuffer, maxCount=50, *args, **kwargs):
@@ -79,7 +79,7 @@ class PostProcessing:
         def calculatePaths(pathLen):
             paths = [((None, None),
                       (None, None),
-                      (None, None))]*pathLen
+                      (None, None))] * pathLen
 
             for c in range(3):
                 pass
@@ -93,8 +93,7 @@ class PostProcessing:
             if paths[0][0] is not None:
                 for i in range(pathLen):
                     pass
-                    #cv2.line(img, path.start_point, path.end_point, color, thickness)
-
+                    # cv2.line(img, path.start_point, path.end_point, color, thickness)
 
     def show(self, img):
         self.showDebug(img)

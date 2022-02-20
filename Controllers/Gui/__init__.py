@@ -1,8 +1,8 @@
 # __init__.py
-import PyQt5
+from .Controller import Controller
 from .Model import Model
 from .View import View
-from .Controller import Controller
+
 
 def start():
     model = Model()

@@ -1,12 +1,10 @@
+import pathlib
+
 import cv2
 import numpy as np
-import pathlib
 from PIL import Image
 
 from .base import IEvaluationStrategy
-import matplotlib.image as img
-
-
 
 
 class showSilhouette(IEvaluationStrategy):
@@ -15,7 +13,7 @@ class showSilhouette(IEvaluationStrategy):
 
     # reading png image file
     folderpath = pathlib.Path(__file__).parent.absolute()
-    fullpath = folderpath/'Silhouette.png'
+    fullpath = folderpath / 'Silhouette.png'
     overlay = cv2.imread(str(fullpath), cv2.IMREAD_UNCHANGED)
     pass
 
@@ -29,7 +27,6 @@ class showSilhouette(IEvaluationStrategy):
         for color in range(0, 3):
             background[:, :, color] = alpha_foreground * foreground[:, :, color] + \
                                       background[:, :, color] * (1 - alpha_foreground)
-
 
         return background
 

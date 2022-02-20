@@ -1,7 +1,8 @@
-from Entities.PreProcessing import ICameraController
 import cv2
+from Entities.PreProcessing import ICameraController
 
 cap = cv2.VideoCapture(0)
+
 
 class CV2Controller(ICameraController):
     def __init__(self):

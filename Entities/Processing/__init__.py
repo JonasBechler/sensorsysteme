@@ -1,3 +1,3 @@
-from.testStrategy import TestStrategy
-from.simpleStrategy import SimpleStrategy
-from.finalStrategy import FinalStrategy
+from .finalStrategy import FinalStrategy
+from .simpleStrategy import SimpleStrategy
+from .testStrategy import TestStrategy

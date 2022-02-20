@@ -6,7 +6,7 @@ from .base import IEvaluationStrategy, smoothData, pix2pos, map
 
 class speedUpDownTimes(IEvaluationStrategy):
     name = "UpDown Times"
-    dataPoints = 150+4
+    dataPoints = 150 + 4
 
     def evaluate(self, img, positions, times):
         def checkTimeUpDown(positions, times):
@@ -34,9 +34,9 @@ class speedUpDownTimes(IEvaluationStrategy):
             except Exception as e:
                 return None
 
-            deltaT = timeBefore60cm_first-timeBefore60cm_second
+            deltaT = timeBefore60cm_first - timeBefore60cm_second
             if testing:
-                deltaT = -deltaT * 1/30
+                deltaT = -deltaT * 1 / 30
             return deltaT
 
         positions = smoothData(positions, 5)
@@ -58,7 +58,7 @@ class speedUpDownTimes(IEvaluationStrategy):
 
 class speedUpDownScore(IEvaluationStrategy):
     name = "UpDown Speed Score"
-    dataPoints = 150+4
+    dataPoints = 150 + 4
 
     def evaluate(self, img, positions, times):
         def checkTimeUpDown(positions, times):
@@ -86,9 +86,9 @@ class speedUpDownScore(IEvaluationStrategy):
             except Exception as e:
                 return None
 
-            deltaT = timeBefore60cm_first-timeBefore60cm_second
+            deltaT = timeBefore60cm_first - timeBefore60cm_second
             if testing:
-                deltaT = -deltaT * 1/30
+                deltaT = -deltaT * 1 / 30
             return deltaT
 
         positions = smoothData(positions, 5)
@@ -137,9 +137,9 @@ class straightScore(IEvaluationStrategy):
 
             maxY = np.nanmax(positions[:, 1])
             minY = np.nanmin(positions[:, 1])
-            if positionCount < 5 or maxY-minY < 25:
+            if positionCount < 5 or maxY - minY < 25:
                 return None
-            return maxX-minX
+            return maxX - minX
 
         positions = smoothData(positions, 5)
         positions = pix2pos(positions)
@@ -157,7 +157,7 @@ class straightScore(IEvaluationStrategy):
         if count == 0:
             score = 0
         else:
-            distance = distance/count
+            distance = distance / count
             if distance > 80:
                 score = 0
             elif distance > 5:

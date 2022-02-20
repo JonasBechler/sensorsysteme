@@ -1,7 +1,9 @@
-import time
-import cv2
-import threading
 import sys
+import threading
+import time
+
+import cv2
+
 from Processing import Processing
 
 cap = cv2.VideoCapture(0)
@@ -35,7 +37,8 @@ class PreProcessing(threading.Thread):
 
                 if not self.threads.full():
                     thread = Processing(thisFrame, lastFrame, img, currentTime,
-                                        resizeDivider=self.resizeDivider, strengthThreshold=self.strengthThreshold, countThreshold=self.countThreshold)
+                                        resizeDivider=self.resizeDivider, strengthThreshold=self.strengthThreshold,
+                                        countThreshold=self.countThreshold)
                     thread.start()
                     self.threads.put(thread)
 

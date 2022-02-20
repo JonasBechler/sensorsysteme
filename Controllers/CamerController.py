@@ -1,8 +1,8 @@
 import time
 
-from UseCases.TakePictureUC import ICameraController
 import cv2
-import numpy as np
+
+from UseCases.TakePictureUC import ICameraController
 
 cap = cv2.VideoCapture(0)
 

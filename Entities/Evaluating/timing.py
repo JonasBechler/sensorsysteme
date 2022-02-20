@@ -1,5 +1,6 @@
-from .base import IEvaluationStrategy
 import cv2
+
+from .base import IEvaluationStrategy
 
 
 class currentFPSandDT(IEvaluationStrategy):
@@ -16,7 +17,7 @@ class currentFPSandDT(IEvaluationStrategy):
 
         if times[0] is None:
             debugFps = "fps: " + ('%.3f' % 30)
-            debugDt = "dt: " + ('%.3f' % (1/30 * 1000))
+            debugDt = "dt: " + ('%.3f' % (1 / 30 * 1000))
         else:
             debugFps = "fps: " + ('%.3f' % currentFPS())
             debugDt = "dt: " + ('%.3f' % (currentTimeDiff() * 1000))
@@ -49,7 +50,7 @@ class averageFPSandDT(IEvaluationStrategy):
 
         if times[0] is None:
             debugFps = "fpsAv: " + ('%.3f' % 30)
-            debugDt = "dtAv: " + ('%.3f' % (1/30 * 1000))
+            debugDt = "dtAv: " + ('%.3f' % (1 / 30 * 1000))
         else:
             debugFps = "fpsAv: " + ('%.3f' % averageFPS())
             debugDt = "dtAv: " + ('%.3f' % (averageTimeDiff() * 1000))

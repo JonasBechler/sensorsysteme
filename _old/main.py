@@ -1,7 +1,7 @@
-from PreProcessing import PreProcessing
-from PostProcessing import PostProcessing
 import queue
 
+from PostProcessing import PostProcessing
+from PreProcessing import PreProcessing
 
 if __name__ == '__main__':
     threads = queue.Queue(maxsize=10)

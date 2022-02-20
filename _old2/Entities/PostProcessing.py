@@ -1,12 +1,8 @@
 import queue
-import sys
-from PyQt5.QtCore import *
 from abc import ABC, abstractmethod
 
-import numpy as np
+from PyQt5.QtCore import *
 
-from Entities.Processing import Processing
-from Entities.PostProcessingStrategy import IPostProcessingStrategy
 from Entities.ShiftingArray import ShiftingArray
 
 
@@ -24,7 +20,6 @@ class PostProcessing:
         self.threads = queue.Queue()
         self.strategies = None
         self.maxCount = maxCount
-
 
     def run(self):
         while self.threads.empty():

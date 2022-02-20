@@ -6,6 +6,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
 
 from Controllers.CamerController import CV2Controller
+
 cam = CV2Controller()
 
 
@@ -33,7 +34,7 @@ class CreateTestFile(QtWidgets.QWidget):
         time.sleep(1)
         print("start")
 
-        self.delayTime = int(1000/30)
+        self.delayTime = int(1000 / 30)
 
         if name != "x":
             self.path = folderPath + name + ".pckl"
@@ -48,7 +49,7 @@ class CreateTestFile(QtWidgets.QWidget):
         pic, _ = cam.takePicture()
         self.data.append(pic)
 
-        if self.i == self.dataLen-1:
+        if self.i == self.dataLen - 1:
             self.stopTime = time.time()
             self.timer.stop()
             fps = self.dataLen / (self.stopTime - self.startTime)

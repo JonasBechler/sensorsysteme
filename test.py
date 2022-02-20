@@ -9,11 +9,11 @@ info from http://www.normankoren.com/Tutorials/MTF.html which tells us that
 line spread function. And some wikipedia lookup.
 """
 
-import numpy as np
-import scipy
-import scipy.ndimage
-import matplotlib.pylab as plt
 import time
+
+import matplotlib.pylab as plt
+import numpy as np
+import scipy.ndimage
 
 
 def MTF(edgespreadfunction):
@@ -70,7 +70,6 @@ noise_sigma = 0.001
 gauss_1_noise = gauss_1 + noise_sigma * np.random.randn(len(dirac))
 gauss_2_noise = gauss_2 + noise_sigma * np.random.randn(len(dirac))
 gauss_3_noise = gauss_3 + noise_sigma * np.random.randn(len(dirac))
-
 
 '''
 Save the plots in a dictionary, so we can iterate through it afterwards. See

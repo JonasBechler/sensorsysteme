@@ -24,7 +24,7 @@ class SampleAccess:
             print("more samples needed")
             return None
 
-        retval = [None]*n
+        retval = [None] * n
         for i, filesName in enumerate(filesNames):
             if i >= n:
                 return retval

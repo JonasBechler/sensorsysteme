@@ -1,19 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication
 
-import queue
-
-
-from Entities.PreProcessing import PreProcessing
-from Entities.ProcessingStrategy import ProcessingStrategy1
-from Entities.PostProcessing import PostProcessing
 from Entities.PostProcessingStrategy import *
-
-from UseCases.UseCases import *
+from PyQt5.QtWidgets import QApplication
 
 from Controllers.CamerController import CV2Controller
 from Controllers.PyQtController import PyQtController
-
+from UseCases.UseCases import *
 
 
 def init():
@@ -24,8 +16,6 @@ def init():
 
     UCStart(cam, gui)
     sys.exit(app.exec_())
-
-
 
 
 if __name__ == '__main__':

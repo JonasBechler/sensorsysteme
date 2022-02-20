@@ -1,13 +1,11 @@
 import os
 import pickle
-import sys
 
 import cv2
 import numpy as np
 from PIL import Image
-
-
 from PyQt5 import QtWidgets, QtCore, QtGui
+
 
 class FileLoader:
     def testNames(self):
@@ -20,7 +18,6 @@ class FileLoader:
         with open(testFolderPath + "/" + testName, "rb") as f:
             return pickle.load(f)
         return
-
 
 
 class MainView(QtWidgets.QMainWindow):
@@ -40,7 +37,7 @@ class MainView(QtWidgets.QMainWindow):
         if e.key() == QtCore.Qt.Key_Right:
             self.index = self.index + 1
             if self.index >= len(self.data):
-                self.index = len(self.data)-1
+                self.index = len(self.data) - 1
             self.setPicture()
         if e.key() == QtCore.Qt.Key_Left:
             self.index = self.index - 1
@@ -49,7 +46,7 @@ class MainView(QtWidgets.QMainWindow):
 
     def setPicture(self):
         currentPic = np.array(self.data[self.index]).astype(int)
-        lastPic = np.array(self.data[self.index+1]).astype(int)
+        lastPic = np.array(self.data[self.index + 1]).astype(int)
         diffPic = cv2.absdiff(currentPic, lastPic, )
 
         img = diffPic
@@ -78,18 +75,20 @@ light_green = (80, S_max, V_max)
 dark_blue = (90, 50, 170)
 light_blue = (150, S_max, V_max)
 
+
 def main(index=0, data=None):
     def frameDif(frame, dif):
         h, w, _ = frame.shape
         img = Image.fromarray(frame)
         img = img.resize((int(w / dif), int(h / dif)))
-        #img = img.resize((int(w), int(h)), Image.NEAREST)
+        # img = img.resize((int(w), int(h)), Image.NEAREST)
         img = np.array(img)
         return img
+
     def frameUp(template, frame):
         h, w, _ = template.shape
         img = Image.fromarray(frame)
-        #img = img.resize((int(w * up), int(h * up)))
+        # img = img.resize((int(w * up), int(h * up)))
         img = img.resize((int(w), int(h)), Image.NEAREST)
         img = np.array(img)
         return img
@@ -98,7 +97,6 @@ def main(index=0, data=None):
         frame_hsv = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2HSV)
         color_mask = cv2.inRange(frame_hsv, dark_color, light_color)
         return cv2.bitwise_and(frame_rgb, frame_rgb, mask=color_mask)
-
 
     frameDivider = 8
     currentPic = np.array(data[index])
@@ -111,7 +109,7 @@ def main(index=0, data=None):
 
     absDiff = np.absolute(currentPic_rgb_oC.astype(float) - lastPic_rgb_oC.astype(float))
     absDiff = absDiff.astype(np.uint8)
-    #cv2.imshow("img", absDiff)
+    # cv2.imshow("img", absDiff)
 
     hsvDiff = cv2.cvtColor(absDiff, cv2.COLOR_RGB2HSV)
     cv2.imwrite('/Users/jonas/Workspaces/Pycharm/Sensorsysteme/Pictures/diff_hsv_0.png', hsvDiff)
@@ -151,15 +149,11 @@ def main(index=0, data=None):
     out = cv2.cvtColor(absDiff, cv2.COLOR_RGB2BGR)
     cv2.imshow("img", out)
 
-
     cv2.imwrite('/Users/jonas/Workspaces/Pycharm/Sensorsysteme/Pictures/input.png', currentPic)
     cv2.imwrite('/Users/jonas/Workspaces/Pycharm/Sensorsysteme/Pictures/input_scaled.png', currentPic_rgb)
     cv2.imwrite('/Users/jonas/Workspaces/Pycharm/Sensorsysteme/Pictures/input_scaled_oC.png', currentPic_rgb_oC)
 
     cv2.imwrite('/Users/jonas/Workspaces/Pycharm/Sensorsysteme/Pictures/diff_rgb.png', absDiff)
-
-
-
 
 
 if __name__ == "__main__":

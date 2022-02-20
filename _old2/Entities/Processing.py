@@ -1,5 +1,6 @@
-from PyQt5.QtCore import *
 import sys
+
+from PyQt5.QtCore import *
 
 
 class Processing:
@@ -31,5 +32,3 @@ class QProcessing(QThread):
         self.processing.run()
         result = self.processing.result
         self.trigger.emit(result)
-
-

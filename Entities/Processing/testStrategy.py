@@ -23,8 +23,8 @@ class TestStrategy(IProcessingStrategy):
         frameDifference = frames[0] - frames[1]
         pixelsCount = [0, 0, 0]
         pixelsSum = [[0, 0], [0, 0], [0, 0]]
-        for y in range(frameDifference.shape[0]-1):
-            for x in range(frameDifference.shape[1]-1):
+        for y in range(frameDifference.shape[0] - 1):
+            for x in range(frameDifference.shape[1] - 1):
                 pixel = frameDifference[y, x, :]
                 for i in range(3):
                     if abs(pixel[i]) > self.strengthThreshold[i]:

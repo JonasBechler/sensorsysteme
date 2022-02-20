@@ -16,6 +16,7 @@ def function(*args, **kwargs):
             print(kwargs[kw][0:2])
     print("Hallllllo")
 
+
 def calc():
     z_real_soll = 4  # mm
     z_real_ist = 3.5  # mm
@@ -25,10 +26,7 @@ def calc():
     print(steps_soll)
 
 
-
-
-
 if __name__ == '__main__':
     while True:
-        x = math.sqrt(random.random()*1000)
+        x = math.sqrt(random.random() * 1000)
         print(x)
